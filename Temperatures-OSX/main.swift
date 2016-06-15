@@ -43,7 +43,10 @@ class SystemTemperatures {
         task.standardError = stderrPipe
 
         // launch task
-        task.launch()
+        // Exceptions like NSInvalidArgumentException can only be caught in ObjC :(
+        if !ObjCTryCatch.executeSafe(task.launch) {
+            throw SystemTemperaturesError.ErrorExecutingiStats
+        }
         
         // read data from stdout and process it
         let stdoutData = stdoutFile.readDataToEndOfFile()
